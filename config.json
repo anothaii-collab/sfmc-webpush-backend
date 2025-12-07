@@ -1,0 +1,57 @@
+{
+  "workflowApiVersion": "1.1",
+  "metaData": {
+    "icon": "https://your-server.com/ui/icon.png",
+    "category": "message"
+  },
+  "type": "REST",
+  "lang": {
+    "en-US": {
+      "name": "Web Push Activity",
+      "description": "Sends Web Push notifications"
+    }
+  },
+  "arguments": {
+    "execute": {
+      "inArguments": [
+        "title",
+        "body",
+        "fcmToken"
+      ],
+      "outArguments": [],
+      "url": "https://sfmc-webpush-backend.onrender.com/execute",
+      "verb": "POST",
+      "body": "",
+      "header": "",
+      "format": "json",
+      "useJwt": true
+    },
+    "save": {
+      "url": "https://sfmc-webpush-backend.onrender.com/save",
+      "verb": "POST",
+      "useJwt": true
+    },
+    "publish": {
+      "url": "https://sfmc-webpush-backend.onrender.com/publish",
+      "verb": "POST",
+      "useJwt": true
+    },
+    "validate": {
+      "url": "https://sfmc-webpush-backend.onrender.com/validate",
+      "verb": "POST",
+      "useJwt": true
+    }
+  },
+  "configurationArguments": {
+    "applicationExtensionKey": "YOUR_APP_EXTENSION_KEY",
+    "isConfigured": true,
+    "save": "execute"
+  },
+  "userInterfaces": {
+    "configModal": {
+      "url": "https://sfmc-webpush-backend.onrender.com/ui/index.html",
+      "height": 400,
+      "width": 600
+    }
+  }
+}
