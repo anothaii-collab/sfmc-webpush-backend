@@ -4,27 +4,26 @@ import bodyParser from "body-parser";
 import admin from "firebase-admin";
 import dotenv from "dotenv";
 
-// Load environment variables from .env file
 dotenv.config();
 
 // Initialize Firebase Admin
 const serviceAccount = {
   project_id: process.env.FIREBASE_PROJECT_ID,
   client_email: process.env.FIREBASE_CLIENT_EMAIL,
-  private_key: process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, "\n"),
+  private_key: process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, "\n")
 };
 
 admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount),
+  credential: admin.credential.cert(serviceAccount)
 });
 
 console.log("✅ Firebase initialized successfully");
 
-// Initialize Express app
+// Initialize Express
 const app = express();
 app.use(bodyParser.json());
 
-// Test endpoint
+// Health check
 app.get("/", (req, res) => {
   res.send("Web Push Backend is running!");
 });
@@ -41,7 +40,7 @@ app.post("/custom-activity", async (req, res) => {
     const message = {
       token: fcmToken,
       notification: { title, body },
-      webpush: { headers: { TTL: "300" } },
+      webpush: { headers: { TTL: "300" } }
     };
 
     const response = await admin.messaging().send(message);
