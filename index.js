@@ -1,6 +1,7 @@
 import express from "express";
 import bodyParser from "body-parser";
 import admin from "firebase-admin";
+import jwt from "jsonwebtoken";
 
 // Initialize Express app
 const app = express();
@@ -25,12 +26,24 @@ app.get("/", (req, res) => {
 // Endpoint for SFMC Custom Activity
 app.post("/custom-activity", async (req, res) => {
   try {
-    const { fcmToken, title, body } = req.body;
+    // Verify JWT from SFMC
+    const authHeader = req.headers.authorization;
+    const token = authHeader?.split(" ")[1]; // Expect "Bearer <token>"
+    if (!token) return res.status(401).json({ error: "Missing JWT token" });
 
+    try {
+      jwt.verify(token, process.env.JWT_SIGNING_SECRET);
+    } catch (err) {
+      return res.status(403).json({ error: "Invalid JWT token" });
+    }
+
+    // Extract request body
+    const { fcmToken, title, body } = req.body;
     if (!fcmToken || !title || !body) {
       return res.status(400).json({ error: "Missing fcmToken, title, or body" });
     }
 
+    // Send Firebase notification
     const message = {
       token: fcmToken,
       notification: { title, body },
